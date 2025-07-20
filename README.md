@@ -40,8 +40,8 @@ Simply describe your event in the chat box, and the assistant will respond with 
 ## 📸 Screenshots
 Below are snapshots showcasing the usage and features of the Event Planner AI application:
 
-**Application Start**
-The initial interface when launching the Gradio UI.
+**Application Start**  
+The initial interface when launching the Gradio UI.  
 <img width="1536" height="712" alt="Screenshot (136)" src="https://github.com/user-attachments/assets/e18089bb-e205-462a-9820-db6888ba4f50" />
 
 **Event Description Input**  
