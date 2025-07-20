@@ -41,18 +41,19 @@ Simply describe your event in the chat box, and the assistant will respond with 
 Below are snapshots showcasing the usage and features of the Event Planner AI application:
 
 **Application Start**  
-The initial interface when launching the Gradio UI.  
-<img width="1536" height="712" alt="Screenshot (136)" src="https://github.com/user-attachments/assets/e18089bb-e205-462a-9820-db6888ba4f50" />
+The initial interface when launching the Gradio UI. 
+ 
+<img width="1504" height="182" alt="Screenshot (138)" src="https://github.com/user-attachments/assets/4a7492d3-89a2-43a8-bce1-54e2b82a9fdd" />
+
 
 **Event Description Input**  
 The user types a description of their event, e.g. “A sunset wedding for 100 people on a beach.”
-<img width="1447" height="200" alt="Screenshot (131)" src="https://github.com/user-attachments/assets/0fdcfd93-b22e-45c4-bdf2-f69467a0695f" />
 
 **DALL·E Generated Image**  
 A visual representation of the event created automatically from the user’s description.
-<img width="1485" height="327" alt="Screenshot (134)" src="https://github.com/user-attachments/assets/742bc9ee-b012-454d-96b5-7c6581f5bbae" />
 
 **Generated Event Plan PDF**  
 Automatic export of the event plan including title, schedule, and additional suggestions.
-<img width="1475" height="127" alt="Screenshot (133)" src="https://github.com/user-attachments/assets/5174c3ed-dc73-45ef-b6dd-6c7c1c006460" />
-[Download the Event Plan PDF](assets/event_plan.pdf)
+
+<img width="1519" height="502" alt="Screenshot (137)" src="https://github.com/user-attachments/assets/2004c7fb-85dc-47c2-a4f2-84b856d51c24" />
+
