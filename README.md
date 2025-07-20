@@ -35,3 +35,24 @@ Open the Gradio interface that opens in your browser and start chatting!
 
 ## Usage
 Simply describe your event in the chat box, and the assistant will respond with ideas, generate an event banner image, suggest additional needs, and create a downloadable PDF plan.
+
+
+## 📸 Screenshots
+Below are snapshots showcasing the usage and features of the Event Planner AI application:
+
+**Application Start**
+The initial interface when launching the Gradio UI.
+<img width="1482" height="231" alt="Screenshot (135)" src="https://github.com/user-attachments/assets/90add67d-29e7-476d-beba-25d1ebbf4f59" />
+
+**Event Description Input**  
+The user types a description of their event, e.g. “A sunset wedding for 100 people on a beach.”
+<img width="1447" height="200" alt="Screenshot (131)" src="https://github.com/user-attachments/assets/0fdcfd93-b22e-45c4-bdf2-f69467a0695f" />
+
+**DALL·E Generated Image**  
+A visual representation of the event created automatically from the user’s description.
+<img width="1485" height="327" alt="Screenshot (134)" src="https://github.com/user-attachments/assets/742bc9ee-b012-454d-96b5-7c6581f5bbae" />
+
+**Generated Event Plan PDF**  
+Automatic export of the event plan including title, schedule, and additional suggestions.
+<img width="1475" height="127" alt="Screenshot (133)" src="https://github.com/user-attachments/assets/5174c3ed-dc73-45ef-b6dd-6c7c1c006460" />
+[Download the Event Plan PDF](assets/pdfs/event_plan.pdf)
