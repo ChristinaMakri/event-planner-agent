@@ -1,4 +1,5 @@
 openai
 gradio
-fpdf
+reportlab
 Pillow
+python-dotenv

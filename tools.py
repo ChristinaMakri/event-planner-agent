@@ -1,96 +1,105 @@
-import openai
 import os
-from fpdf import FPDF
+import openai
+from datetime import datetime
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from dotenv import load_dotenv
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY") or "your-key-here"
 
-def extract_vibe(event_description: str) -> str:
-    """
-    Given the user event description, generate a creative prompt for DALL·E.
-    """
-    prompt = f"""
-    Create an artistic image prompt based on the following event description:
-    {event_description}
+def extract_vibe(user_input):
+    return f"Atmospheric scene: {user_input}, cinematic lighting, colorful, stylized illustration"
 
-    Make it descriptive and capture the atmosphere and style fitting the theme.
-    """
+def generate_dalle_image(prompt):
+    try:
+        response = openai.images.generate(
+            prompt=prompt,
+            model="dall-e-3",
+            n=1,
+            size="1024x1024"
+        )
+        return response.data[0].url
+    except Exception as e:
+        print("Image generation failed:", e)
+        return None
+
+def predict_missing_needs(user_input):
+    prompt = f"""The user said: "{user_input}". What are 3 things people often forget for events like this? Bullet points."""
+    try:
+        res = openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return res.choices[0].message.content.strip()
+    except:
+        return "No suggestions available."
+
+def generate_pdf(event_data, filename):
+    c = canvas.Canvas(filename, pagesize=A4)
+    width, height = A4
+    y = height - 50
+
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(width / 2, y, event_data["title"])
+    y -= 30
+
+    c.setFont("Helvetica", 12)
+    c.drawString(50, y, f"Date: {event_data['date']}")
+    y -= 20
+    c.drawString(50, y, f"Location: {event_data['location']}")
+    y -= 40
+
+    for line in event_data["description"].split('\n'):
+        c.drawString(50, y, line)
+        y -= 18
+
+    y -= 20
+    c.setFont("Helvetica-Bold", 13)
+    c.drawString(50, y, "Schedule:")
+    y -= 20
+
+    c.setFont("Helvetica", 12)
+    for item in event_data["schedule"]:
+        c.drawString(60, y, f"- {item}")
+        y -= 16
+
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    c.save()
+
+def chat(history):
+    from prompts import system_prompt
+
+    messages = [{"role": "system", "content": system_prompt}] + [
+        {"role": role.lower(), "content": content} for role, content in history
+    ]
 
     response = openai.chat.completions.create(
         model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}]
+        messages=messages
     )
-    vibe_prompt = response.choices[0].message.content.strip()
-    return vibe_prompt
+    assistant_reply = response.choices[0].message.content
+    messages.append({"role": "assistant", "content": assistant_reply})
 
+    user_msg = messages[-2]["content"]
+    image_url = generate_dalle_image(extract_vibe(user_msg))
+    suggestions = predict_missing_needs(user_msg)
 
-def generate_dalle_image(prompt: str) -> str:
-    """
-    Generate an image using OpenAI's DALL·E API.
-    Returns the URL of the generated image.
-    """
-    response = openai.images.generate(
-        model="dall-e-3",
-        prompt=prompt,
-        n=1,
-        size="1024x1024"
-    )
-    image_url = response.data[0].url
-    return image_url
+    event_data = {
+        "title": "Your Event Plan",
+        "date": "To be decided",
+        "location": "To be decided",
+        "description": assistant_reply + "\n\n📝 Additional suggestions:\n" + suggestions,
+        "schedule": ["Welcome", "Main activities", "Breaks", "Closing"]
+    }
 
+    filename = f"event_exports/pdfs/event_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    generate_pdf(event_data, filename)
 
-def predict_missing_needs(event_text: str) -> str:
-    """
-    Given event details, predict any missing needs or recommendations.
-    """
-    prompt = f"""
-    Given the following event description, suggest any missing needs or important considerations that the organizer might have overlooked:
-    {event_text}
-    """
+    updated = [(m["role"].capitalize(), m["content"]) for m in messages if m["role"] in ["user", "assistant"]]
+    return updated, image_url, filename
 
-    response = openai.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    suggestions = response.choices[0].message.content.strip()
-    return suggestions
-
-
-def generate_pdf(event_details: dict, output_path: str):
-    """
-    Generate a PDF summary of the event.
-    
-    Args:
-        event_details (dict): {
-            'title': str,
-            'date': str,
-            'location': str,
-            'description': str,
-            'schedule': list of str (each step/activity)
-        }
-        output_path (str): path to save the PDF file
-    """
-    pdf = FPDF()
-    pdf.add_page()
-
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, event_details.get('title', 'Event Plan'), ln=True, align='C')
-
-    pdf.set_font("Arial", size=12)
-    pdf.ln(10)
-    pdf.cell(0, 10, f"Date: {event_details.get('date', 'N/A')}", ln=True)
-    pdf.cell(0, 10, f"Location: {event_details.get('location', 'N/A')}", ln=True)
-    pdf.ln(5)
-
-    description = event_details.get('description', '')
-    pdf.multi_cell(0, 10, description)
-    pdf.ln(10)
-
-    schedule = event_details.get('schedule', [])
-    if schedule:
-        pdf.set_font("Arial", 'B', 14)
-        pdf.cell(0, 10, "Schedule:", ln=True)
-        pdf.set_font("Arial", size=12)
-        for item in schedule:
-            pdf.cell(0, 10, f"- {item}", ln=True)
-
-    pdf.output(output_path)
+def user_submit(message, history):
+    history = history or []
+    history.append(("User", message))
+    return "", history
