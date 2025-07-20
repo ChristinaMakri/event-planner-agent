@@ -55,4 +55,4 @@ A visual representation of the event created automatically from the user’s des
 **Generated Event Plan PDF**  
 Automatic export of the event plan including title, schedule, and additional suggestions.
 <img width="1475" height="127" alt="Screenshot (133)" src="https://github.com/user-attachments/assets/5174c3ed-dc73-45ef-b6dd-6c7c1c006460" />
-[Download the Event Plan PDF](assets/pdfs/event_plan.pdf)
+[Download the Event Plan PDF](assets/event_plan.pdf)
