@@ -42,7 +42,7 @@ Below are snapshots showcasing the usage and features of the Event Planner AI ap
 
 **Application Start**
 The initial interface when launching the Gradio UI.
-<img width="1482" height="231" alt="Screenshot (135)" src="https://github.com/user-attachments/assets/90add67d-29e7-476d-beba-25d1ebbf4f59" />
+<img width="1536" height="712" alt="Screenshot (136)" src="https://github.com/user-attachments/assets/e18089bb-e205-462a-9820-db6888ba4f50" />
 
 **Event Description Input**  
 The user types a description of their event, e.g. “A sunset wedding for 100 people on a beach.”
